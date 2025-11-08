@@ -352,36 +352,38 @@ const Chat = ({ isOpen, onClose, initialMessage }: ChatProps) => {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col min-h-[100dvh] w-screen overflow-hidden">
         {/* Header */}
-        <div className="bg-secondary px-3 sm:px-6 py-4 flex items-center justify-between border-b-2 border-deep-purple">
+        <div className="bg-secondary py-4 flex items-center justify-between border-b-2 border-deep-purple">
           <div className="container mx-auto max-w-7xl flex items-center justify-between gap-4">
           {/* Left Side - Logo */}
           <div className="flex items-center">
-            <button 
+            <button
               onClick={onClose}
-              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity cursor-pointer -ml-2 sm:ml-0"
+              className="flex items-center space-x-2 sm:space-x-3 -ml-1 sm:ml-0 hover:opacity-90 transition-opacity"
+              aria-label="Back to home"
             >
               <img src="/logo.svg" alt="HOPEr Logo" className="h-12 sm:h-16 w-auto" />
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold text-secondary-foreground">HOPEr</h1>
-                <p className="text-xs sm:text-sm text-secondary-foreground/80 hidden md:block">Your empathetic AI companion</p>
-              </div>
+              <h1 className="text-lg sm:text-xl font-bold text-secondary-foreground">HOPEr</h1>
             </button>
           </div>
           
           {/* Right Side - Safe & Back Button */}
           <div className="flex items-center space-x-3 sm:space-x-6">
-            <div className="hidden sm:flex items-center space-x-2 text-xs text-secondary-foreground/80">
+            <button
+              onClick={onClose}
+              className="hidden sm:flex items-center space-x-2 text-xs text-secondary-foreground/80 hover:text-primary transition-colors"
+              aria-label="Back to home"
+            >
               <Shield className="w-4 h-4" />
               <span className="hidden lg:inline">Safe & Private</span>
-            </div>
+            </button>
             <Button
               onClick={onClose}
               variant="ghost"
-              size="lg"
-              className="text-secondary-foreground hover:text-primary px-3 sm:px-6 py-2 -mr-2 sm:mr-0"
+              size="icon"
+              className="text-secondary-foreground hover:text-primary w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-secondary-foreground/20"
+              aria-label="Back to website"
             >
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-2" />
-              <span className="hidden sm:inline">Back to Website</span>
+              <ArrowLeft className="w-5 h-5" />
             </Button>
           </div>
           </div>

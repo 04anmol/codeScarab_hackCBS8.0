@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 const MoodCheckSection = () => {
   const navigate = useNavigate();
-
   return (
     <section id="mood-check" className="bg-off-white px-4 py-16">
       <div className="container mx-auto max-w-6xl">
-        <div className="bg-white border-2 border-deep-purple/20 rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+        <div className="relative bg-white border-2 border-deep-purple/20 rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row">
           <div className="md:w-1/2 p-8 sm:p-10 bg-gradient-to-br from-soft-lavender/40 to-white">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-golden-yellow/20 text-golden-yellow text-sm font-semibold mb-4">
               <HeartPulse className="h-4 w-4" />
