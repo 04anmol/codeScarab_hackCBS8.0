@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, ArrowLeft, Heart, Shield, Clock, Lightbulb, X } from "lucide-react";
@@ -14,9 +14,10 @@ interface Message {
 interface ChatProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMessage?: string;
 }
 
-const Chat = ({ isOpen, onClose }: ChatProps) => {
+const Chat = ({ isOpen, onClose, initialMessage }: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -32,6 +33,7 @@ const Chat = ({ isOpen, onClose }: ChatProps) => {
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasProcessedInitialMessage = useRef(false);
 
   // Conversation starter suggestions
   const conversationStarters = [
@@ -292,9 +294,9 @@ const Chat = ({ isOpen, onClose }: ChatProps) => {
     };
   };
 
-  const handleSendMessage = async (message?: string) => {
-    const messageToSend = message || inputValue;
-    if (!messageToSend.trim()) return;
+  const handleSendMessage = useCallback((message?: string) => {
+    const messageToSend = (message ?? inputValue).trim();
+    if (!messageToSend) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -322,7 +324,17 @@ const Chat = ({ isOpen, onClose }: ChatProps) => {
       setMessages(prev => [...prev, aiMessage]);
       setIsTyping(false);
     }, 1500);
-  };
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (!initialMessage || hasProcessedInitialMessage.current) return;
+
+    const trimmed = initialMessage.trim();
+    if (!trimmed) return;
+
+    hasProcessedInitialMessage.current = true;
+    handleSendMessage(trimmed);
+  }, [initialMessage, handleSendMessage]);
 
   const handleSuggestionClick = (suggestion: string) => {
     handleSendMessage(suggestion);
