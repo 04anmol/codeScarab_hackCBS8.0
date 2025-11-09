@@ -74,22 +74,22 @@ const ChatLaunchCard = ({
     : typewriterPhrases[phraseIndex].slice(0, Math.min(charIndex, typewriterPhrases[phraseIndex].length));
 
   return (
-    <div className={cn("relative w-full max-w-md", className)}>
+    <div className={cn("relative flex w-full max-w-md", className)}>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br from-soft-lavender/60 via-white to-mint-green/50 opacity-90 blur-2xl"
       />
-      <div className="relative overflow-hidden rounded-[24px] border border-deep-purple/20 bg-white/90 backdrop-blur-xl shadow-[0_25px_60px_rgba(108,74,182,0.18)]">
-        <div className="relative space-y-6 p-6 sm:p-8">
+      <div className="relative flex w-full flex-col overflow-hidden rounded-[24px] border border-deep-purple/20 bg-white/90 backdrop-blur-xl shadow-[0_25px_60px_rgba(108,74,182,0.18)]">
+        <div className="relative flex h-full flex-col justify-between space-y-6 p-6 sm:p-8">
           <div className="flex flex-col items-center text-center">
             <img
               src="/logo.svg"
               alt="HOPEr Logo"
-              className="h-32 w-auto sm:h-36"
+              className="h-36 w-auto sm:h-40"
               style={{ animation: "float 3s ease-in-out infinite" }}
             />
           </div>
-          <form onSubmit={onStartChat} className="space-y-3">
+          <form onSubmit={onStartChat} className="space-y-3 pt-4 sm:pt-6">
             <div className="space-y-3">
               <label
                 htmlFor="hero-chat-starter"
@@ -186,9 +186,9 @@ const Hero = () => {
           </div>
 
           {/* Desktop Layout - Side by Side */}
-          <div className="hidden lg:grid lg:grid-cols-2 gap-10 xl:gap-12 items-center">
+          <div className="hidden lg:grid lg:grid-cols-2 gap-10 xl:gap-12 items-stretch">
             {/* Left Side - Content */}
-            <div className="space-y-6 lg:space-y-8">
+            <div className="flex h-full flex-col justify-center space-y-6 lg:space-y-8">
               {/* Main Heading */}
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground">
                 Turning moments of stress into steps of hope
@@ -221,9 +221,9 @@ const Hero = () => {
             </div>
 
             {/* Right Side - Logo */}
-            <div className="flex justify-center lg:justify-end">
+            <div className="flex h-full justify-center lg:justify-end">
               <ChatLaunchCard
-                className="max-w-sm"
+                className="max-w-sm h-full"
                 starterMessage={starterMessage}
                 setStarterMessage={setStarterMessage}
                 onStartChat={handleStartChat}

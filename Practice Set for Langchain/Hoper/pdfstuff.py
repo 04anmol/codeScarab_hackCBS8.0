@@ -262,6 +262,7 @@ Run:
 # Imports
 # -----------------------------
 import os
+from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional
 
 import streamlit as st
@@ -287,6 +288,9 @@ from langchain_core.runnables import Runnable, RunnableLambda
 # Config (tunable)
 # -----------------------------
 INDEX_NAME = "hoperbot"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+FAVICON_PATH = PROJECT_ROOT / "public" / "favicon.ico"
+PAGE_ICON = str(FAVICON_PATH) if FAVICON_PATH.exists() else "📚"
 
 # Embeddings
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
@@ -448,14 +452,29 @@ def needs_fallback(answer_text: str, context_docs: List) -> bool:
 # -----------------------------
 # Streamlit App
 # -----------------------------
-st.set_page_config(page_title="HOPEr RAG (Pinecone + OpenAI)", page_icon="📚")
-st.title("HOPEr")
+st.set_page_config(
+    page_title="HOPEr - Mental Health Awareness & Support",
+    page_icon=PAGE_ICON,
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+st.markdown(
+    "<h1 style='text-align:center; margin-bottom: 0.2rem; color:#F4B731;'>HOPEr</h1>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<p style='text-align:center; color:rgba(255,255,255,0.7); margin-top:0;'>Turning moments of stress into steps of hope.</p>",
+    unsafe_allow_html=True,
+)
 
 with st.sidebar:
     st.header("Settings")
     load_dotenv()
-    UPSERT_DATA = st.toggle("(Re)Embed & upsert PDFs on start", value=False,
-                            help="Enable if you've changed PDFs and want to (re)index.")
+    UPSERT_DATA = st.toggle(
+        "(Re)Embed & upsert PDFs on start",
+        value=False,
+        help="Enable if you've changed PDFs and want to (re)index."
+    )
     k = st.slider("Top-k documents", min_value=1, max_value=20, value=K_TOP, step=1)
     st.caption("Your `.env` must contain OPENAI_API_KEY and PINECONE_API_KEY.")
 
@@ -508,11 +527,49 @@ def bootstrap_pipeline(upsert: bool, k_top: int):
 with st.spinner("Initializing…"):
     embeddings, retriever, llm, rag_chain = bootstrap_pipeline(UPSERT_DATA, k)
 
-# Input (use text_area for long queries)
+# Input (fixed height, button below)
+TEXT_INPUT_HEIGHT = 136
+
+st.markdown(
+    """
+    <style>
+        [data-testid="stTextArea"] textarea {
+            background-color: #C6B9E0 !important;
+            color: #2E2450 !important;
+            resize: none !important;
+            border: none;
+            box-shadow: none;
+        }
+        [data-testid="stTextArea"] textarea::placeholder {
+            color: rgba(46,36,80,0.6);
+        }
+        [data-testid="stTextArea"] textarea:focus {
+            border: none;
+            box-shadow: none;
+            outline: none;
+        }
+        div[data-testid="stButton"] button {
+            height: 48px;
+            width: 160px;
+            background-color: #6C4AB6;
+            color: #FFFFFF;
+            border: 3px solid #472A80;
+            font-weight: 600;
+        }
+        div[data-testid="stButton"] button:hover {
+            background-color: #5935A1;
+            border-color: #2E1E67;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 query = st.text_area(
-    "Ask a question about your PDFs (or anything):",
-    placeholder="e.g., What is Mental Health?",
-    height=120
+    label="",
+    placeholder="Share what's on your heart, and HOPEr will guide you:",
+    key="user_query",
+    height=TEXT_INPUT_HEIGHT,
 )
 go = st.button("Ask")
 
