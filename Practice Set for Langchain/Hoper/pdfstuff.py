@@ -609,8 +609,8 @@ if go and query.strip():
 
     # Output
     st.subheader("Answer")
-    badge = "🔎 RAG" if not used_fallback else "🌐 OpenAI fallback"
-    st.markdown(f"**{badge}**")
+    if not used_fallback:
+        st.markdown("**🔎 RAG**")
     st.write(answer)
 
     # Sources (only for RAG path)
