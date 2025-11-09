@@ -1,149 +1,124 @@
-# HOPEr – Mental Health Support Platform
+# 💫 HOPEr – Mental Health Support Platform
 
-HOPEr is a calming, student-friendly mental health companion. The web experience pairs an empathetic hero moment, an interactive chat surface, guided mood check-ins, and an optional AI-powered support assistant so visitors can move from stress to hope in a few clicks.
-
----
-
-## 🌟 Overview
-
-- **Hero support card** – a floating chat card with a typewriter prompt, pre-filled message hand-off, and a direct gateway to “HOPEr Support” (a Streamlit RAG assistant).  
-- **Guided chat experience** – `/chat` renders a full-screen conversational UI with smart suggestions, animated typing indicators, mock empathetic responses, and automatic dispatch of the hero prompt when present.  
-- **“Know Your Mood” quiz** – an 8-question check-in with a promotion card on the homepage and a dedicated results view that can optionally post scores to a backend service.  
-- **Smooth navigation** – anchored sections, `ScrollToTop` on route changes, and an updated navbar/chat CTA that respects external support sessions.  
-- **Streamlit HOPEr Support** – a LangChain + Pinecone powered assistant (in `Practice Set for Langchain/Hoper`) that the hero CTA and navbar “Chat” links open in a new tab.
+HOPEr is an AI-powered mental health companion designed to provide **emotional support, awareness, and guidance** through empathetic conversations.  
+It helps students and individuals manage **stress, anxiety, burnout, and emotional imbalance** by combining human-like understanding with smart, data-driven insights.
 
 ---
 
-## 🚀 Getting Started (Web App)
+## 🧠 About the Project
 
-### Prerequisites
-- Node.js ≥ 18
-- npm (bundled with Node)
+HOPEr acts as a **virtual mental wellness assistant**, empowering users to track their mood, express emotions freely, and receive tailored suggestions and responses — all while ensuring privacy and authenticity.  
+It uses **LangChain**, **FastAPI**, and **Pinecone Vector Databases** to retrieve meaningful, evidence-based content in real time and present it through an intuitive, calming interface.
 
-### Installation
-```bash
-git clone <repository-url>
-cd hoper_hackcbs8-main
-npm install
-npm run dev
-```
-
-Open the app at **http://localhost:5173**. The development server hot-reloads on save.
-
-### Core Scripts
-| Command            | Description                                  |
-|--------------------|----------------------------------------------|
-| `npm run dev`      | Start Vite dev server                        |
-| `npm run build`    | Create a production build in `dist/`         |
-| `npm run preview`  | Preview the production build locally         |
-| `npm run lint`     | Run ESLint with the configured rules         |
+📄 **Presentation:** [View Google Slides](https://docs.google.com/presentation/d/1EU21qgEkFCaWVA2_XrjrfKBD-Rxx9M5FrGIt6cTblyg/edit?usp=sharing)
 
 ---
 
-## 🧭 Key Configuration
+## 💡 The Problem It Solves
 
-- **Support link** – Both the hero CTA and navbar “Chat” button open the Streamlit assistant defined by `SUPPORT_URL`.  
-  - Update the constant in `src/components/Hero.tsx` and `src/components/Navbar.tsx` to point at your deployed assistant.
-- **Chat pre-fill** – `Hero.tsx` sends the user’s first message to `/chat` via navigation state. `ChatPage.tsx` consumes it and automatically posts the message once the chat mounts.
-- **Routing** – `src/components/ScrollToTop.tsx` is registered in `App.tsx` so every route jump or hash navigation lands at the top of the page.
+Mental health issues like **stress, depression, and anxiety** are increasing rapidly among youth, but access to professional help remains limited due to:
 
----
+- Lack of awareness and stigma surrounding mental health.
+- Limited availability of affordable, immediate counseling support.
+- Hesitation to open up or seek help in person.
+- Overload of information online without credible guidance.
 
-## ✨ Frontend Feature Highlights
+💛 **HOPEr bridges this gap** by offering:
 
-- **Right rail hero card** sized to match the content column, with enlarged floating logo, blurred glass aesthetic, and an accessibility-friendly typewriter prompt.
-- **Chat UI (`src/components/Chat.tsx`)**  
-  - Auto-scroll, typing animation, timestamped bubbles, and curated “Conversation Starters”.  
-  - “Back to home” controls that return to the landing page.  
-  - Mock empathetic responses with category-based copy and sources for future integration.
-- **Navbar (`src/components/Navbar.tsx`)**  
-  - Smooth internal scrolling for sections, mobile drawer, and persistent “Get Started” CTA.  
-  - “Chat” launches the Streamlit assistant in a new tab.
-- **Mood Check Section & Quiz**  
-  - `src/components/MoodCheckSection.tsx` invites users into `/mood-check`.  
-  - `src/components/mood-quiz/MoodQuiz.tsx` handles question flow, scoring, and results; logic is shared via `src/lib/mood-evaluator.ts`.
+- A **non-judgmental AI companion** that listens and responds empathetically.
+- **24×7 personalized guidance** powered by verified knowledge bases.
+- A safe space for individuals to **self-assess and express emotions** privately.
+- Real-time **AI-assisted responses** to provide comfort and clarity.
 
 ---
 
-## 📁 Project Structure
+## 🧭 Use Cases
 
-```
-.
-├── public/                     # Static assets (logos, imagery, video)
-├── src/
-│   ├── components/
-│   │   ├── Hero.tsx            # Landing hero with support card
-│   │   ├── Chat.tsx            # Chat panel used by ChatPage
-│   │   ├── Navbar.tsx          # Sticky navigation with anchors
-│   │   ├── MoodCheckSection.tsx# Home promo for the quiz
-│   │   ├── ScrollToTop.tsx     # Route-aware scroll reset
-│   │   ├── ui/                 # shadcn-inspired primitive components
-│   │   └── …                   # Additional sections (HowItWorks, Services, etc.)
-│   ├── pages/
-│   │   ├── Index.tsx           # Home composition
-│   │   ├── ChatPage.tsx        # Full-screen chat wrapper
-│   │   ├── FAQ.tsx, LearnMore.tsx, MoodQuiz.tsx, … 
-│   ├── hooks/                  # Reusable hooks (e.g., use-mobile)
-│   ├── lib/                    # Utility helpers (e.g., mood evaluator, cn)
-│   ├── App.tsx                 # Router + providers
-│   └── main.tsx                # Vite entry
-├── Practice Set for Langchain/
-│   └── Hoper/
-│       └── pdfstuff.py         # Streamlit RAG assistant
-├── tailwind.config.ts          # Tailwind theme (brand palette, fonts)
-├── package.json
-└── README.md                   # You are here
-```
+| Scenario                                  | How HOPEr Helps                                                                     |
+| ----------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Student facing academic stress**        | Provides motivational and mindful coping suggestions through chat.                  |
+| **Someone feeling anxious or isolated**   | Engages empathetically using emotional tone detection and supportive prompts.       |
+| **Users seeking self-awareness**          | Guides users through the “Know Your Mood” quiz to understand their emotional state. |
+| **Therapy support companion**             | Acts as a non-replacement but effective first step before professional help.        |
+| **Corporate or institutional deployment** | Can be integrated for employees or students to encourage mental wellness check-ins. |
 
 ---
 
-## 🤖 HOPEr Support (Streamlit RAG Assistant)
+## ⚙️ System Architecture
 
-The Streamlit app in `Practice Set for Langchain/Hoper/pdfstuff.py` powers the external support link. It loads PDFs into Pinecone, retrieves relevant passages, and falls back to a direct OpenAI response when context is thin.
+**PDF → Text Extraction → Chunking → Embeddings → Pinecone DB  
+User Query → FastAPI → Pinecone → Retrieve Context → OpenAI LLM → Response → Frontend**
 
-### Running the assistant locally
-1. Ensure Python 3.10+ is available.
-2. Create a virtual environment and install dependencies:
+This architecture ensures that every user query is **contextually mapped**, **semantically understood**, and **emotionally aligned** before being presented as a helpful response.
+
+---
+
+## 🚀 Core Technologies
+
+| Stack              | Description                                                              |
+| ------------------ | ------------------------------------------------------------------------ |
+| **Frontend**       | ReactJS + TailwindCSS for smooth, responsive, and calming user interface |
+| **Backend**        | Python (FastAPI) for efficient data handling and AI pipeline integration |
+| **AI Integration** | LangChain + OpenAI GPT for intelligent, empathetic conversations         |
+| **Database**       | Pinecone Vector Database for semantic retrieval and contextual matching  |
+| **Knowledge Base** | Extracted and processed from verified mental health PDFs and resources   |
+
+---
+
+## 👩‍💻 Team Members
+
+| Name               | Role                                        | Description                                                                                                                                                                       |
+| ------------------ | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Anmol Pandey**   | _Frontend Developer_                        | Leads frontend development using ReactJS and Tailwind. Designs and implements intuitive UI components for chat, quizzes, and navigation ensuring smooth, responsive interactions. |
+| **Akshat Verma**   | _Backend Developer_                         | Builds and manages the FastAPI backend, connecting LangChain modules with Pinecone and OpenAI APIs. Ensures fast, reliable, and secure response handling between AI and frontend. |
+| **Jiraj Pandey**   | _UI/UX Designer_                            | Designs emotionally engaging and user-friendly layouts with focus on mental calmness. Shapes color palette, typography, and interactive flows aligned with user empathy.          |
+| **Shalini Pandey** | _Data Extraction & Knowledge Base Engineer_ | Handles PDF data extraction, chunking, and embedding generation for the knowledge base. Ensures high-quality, relevant, and contextual information storage in Pinecone.           |
+
+---
+
+## 🌈 Key Features
+
+- 🧭 **Mood Check-in:** “Know Your Mood” quiz with adaptive results.
+- 💬 **Empathetic Chatbot:** Emotion-aware AI assistant using LangChain + GPT.
+- 🧩 **RAG Pipeline:** Retrieves the most relevant, verified knowledge from vector databases.
+- 🎨 **Calming UI/UX:** Designed for comfort and focus during emotional stress.
+- 🔒 **Secure & Private:** No personal data collection — conversations stay confidential.
+
+---
+
+## ⚡ Usage Instructions
+
+1. **Clone the repository:**
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
-   pip install streamlit python-dotenv langchain-community langchain-openai \
-               langchain-text-splitters langchain-huggingface pinecone-client
+   git clone https://github.com/04anmol/codeScarab_hackCBS8.0
+   cd hoper_hackcbs8-main
    ```
-3. Provide credentials in `Practice Set for Langchain/Hoper/.env`:
-   ```
-   OPENAI_API_KEY=...
-   PINECONE_API_KEY=...
-   ```
-4. Run the assistant:
+2. **Install dependencies:**
    ```bash
-   streamlit run "Practice Set for Langchain/Hoper/pdfstuff.py"
+   npm install
+   npm run dev
    ```
-5. Update `SUPPORT_URL` in the React app to match the Streamlit URL (default `http://localhost:8504/`).
+3. **streamlit run "Practice Set for Langchain/Hoper/pdfstuff.py"**
 
-The sidebar lets you toggle PDF re-indexing and adjust retrieval `k`. The UI displays whether an answer came from RAG or from the fallback model.
+## 🌍 Impact
 
----
+- Promotes **mental wellness and emotional awareness** among youth.
+- Offers an **AI-driven safe space** for individuals to express emotions.
+- Encourages **early-stage intervention** and self-reflection.
+- Bridges the gap between **technology and empathy** for societal good.
 
-## 🧪 Testing & Quality
+## 🧩 Future Enhancements
 
-- **Type checking & linting** – Run `npm run lint` to enforce ESLint + TypeScript rules.  
-- **Manual QA** – Verify the hero card launches support, the `/chat` route handles the pre-filled prompt, and navigation restores scroll correctly.  
-- **Streamlit diagnostics** – While the Streamlit app runs, logs surface embedding progress and fallback usage in the console.
+- 🎯 Integration of **sentiment-based voice responses** for enhanced interaction.
+- 🧘 Addition of **guided breathing and relaxation modules**.
+- 🩵 Building a **community support forum** for peer-to-peer empathy.
+- 🌐 Multilingual support for broader accessibility.
 
----
+## 💎 Why HOPEr?
 
-## 🤝 Contributing
+- Combines **Retrieval-Augmented Generation (RAG)** with **empathetic NLP**.
+- Simple, secure, and user-friendly design for mental health support.
+- Built with **purpose, empathy, and precision** — not just technology.
+- Designed to **listen first**, then respond with compassion.
 
-Issues and pull requests that improve accessibility, empathy, or stability are welcome. Please follow the existing coding conventions (`tsx`, Tailwind utility classes, shadcn patterns) and keep the tone aligned with our mission of warm, stigma-free support.
-
----
-
-## 📄 License & Support
-
-This project is released under the **MIT License**.  
-Questions or ideas? Open an issue or reach out through the HOPEr contact channels.
-
----
-
-**Remember: your mental health matters. You are not alone.**
+**💛 “Your mental health matters — You are not alone.”**
