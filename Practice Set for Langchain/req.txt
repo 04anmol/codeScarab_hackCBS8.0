@@ -1,0 +1,28 @@
+#langchain core
+langchain
+langchain-core
+
+#langchain integration with openai
+langchain-openai
+openai
+
+#Similartiy search
+numpy
+scikit-learn
+
+#Load environment variable
+python-dotenv
+
+
+
+sentence-transformers==2.2.2
+sentence-transformers
+langchain
+flask
+pypdf
+python-dotenv
+pinecone[grpc]
+langchain-pinecone
+langchain_community
+langchain_openai
+langchain_experimental
