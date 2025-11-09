@@ -85,7 +85,7 @@ const ChatLaunchCard = ({
             <img
               src="/logo.svg"
               alt="HOPEr Logo"
-              className="h-36 w-auto sm:h-40"
+              className="h-52 w-auto sm:h-60"
               style={{ animation: "float 3s ease-in-out infinite" }}
             />
           </div>
