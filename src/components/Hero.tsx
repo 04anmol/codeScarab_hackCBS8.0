@@ -123,9 +123,15 @@ const ChatLaunchCard = ({
   );
 };
 
+const SUPPORT_URL = "http://localhost:8504/";
+
 const Hero = () => {
   const navigate = useNavigate();
   const [starterMessage, setStarterMessage] = useState("");
+
+  const goToSupport = () => {
+    window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
+  };
 
   const handleStartChat = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -170,7 +176,7 @@ const Hero = () => {
               <Button 
                 size="lg" 
                 className="text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 w-full sm:w-auto active:scale-95 transition-transform" 
-                onClick={() => navigate('/chat')}
+                onClick={goToSupport}
               >
                 Get Support Now
               </Button>
@@ -205,7 +211,7 @@ const Hero = () => {
                 <Button 
                   size="lg" 
                   className="text-lg px-8 py-6 active:scale-95 transition-transform" 
-                  onClick={() => navigate('/chat')}
+                  onClick={goToSupport}
                 >
                   Get Support Now
                 </Button>

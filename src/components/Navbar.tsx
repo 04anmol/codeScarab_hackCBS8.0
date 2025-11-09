@@ -7,6 +7,8 @@ interface NavbarProps {
   onOpenChat?: () => void;
 }
 
+const SUPPORT_URL = "http://localhost:8504/";
+
 const Navbar = ({ onOpenChat }: NavbarProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -60,6 +62,10 @@ const Navbar = ({ onOpenChat }: NavbarProps) => {
     setMobileMenuOpen(false);
   };
 
+  const openSupportChat = () => {
+    window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
+  };
+
   const navLinks = [
     { name: "About", href: "#meet-hoper" },
     { name: "How It Works", href: "#how-it-works" },
@@ -99,7 +105,7 @@ const Navbar = ({ onOpenChat }: NavbarProps) => {
                 </button>
               ))}
               <button
-                onClick={() => navigate('/chat')}
+                onClick={openSupportChat}
                 className="text-secondary-foreground hover:text-primary transition-colors duration-300 font-medium text-sm lg:text-base active:scale-95"
               >
                 Chat
@@ -156,7 +162,7 @@ const Navbar = ({ onOpenChat }: NavbarProps) => {
               ))}
               <button
                 onClick={() => {
-                  navigate('/chat');
+                  openSupportChat();
                   setMobileMenuOpen(false);
                 }}
                 className="text-secondary-foreground hover:text-primary transition-colors duration-300 font-medium py-2 text-left text-base active:scale-95"
