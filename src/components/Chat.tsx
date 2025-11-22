@@ -124,177 +124,51 @@ const Chat = ({ isOpen, onClose, initialMessage }: ChatProps) => {
     };
   }, []);
 
-  // Enhanced mock responses for demonstration
-  const getMockResponse = (input: string): { content: string; sources: string[] } => {
-    const lowerInput = input.toLowerCase();
-    
-    // Greetings
-    if (lowerInput.includes("hi") || lowerInput.includes("hello") || lowerInput.includes("hey")) {
-      const responses = [
-        "Hello! I'm HOPEr, your empathetic AI companion. I'm here to listen and support you through whatever you're experiencing. How are you feeling today?",
-        "Hi there! I'm glad you reached out. I'm here to provide a safe space for you to share what's on your mind. What would you like to talk about?",
-        "Hello! I'm HOPEr, and I'm here to support you. Whether you're having a great day or going through a tough time, I'm ready to listen. How can I help you today?"
-      ];
+  // API call to backend
+  const getAIResponse = async (input: string): Promise<{ content: string; sources?: string[] }> => {
+    try {
+      const response = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Extract sources from the response
+      // Sources are in format: [{ source: "path/to/file", content: "..." }, ...]
+      const sourcesList: string[] = [];
+      if (data.sources && Array.isArray(data.sources)) {
+        data.sources.forEach((src: { source?: string; content?: string }) => {
+          if (src.source) {
+            // Extract just the filename from the path for cleaner display
+            const fileName = src.source.split(/[/\\]/).pop() || src.source;
+            sourcesList.push(fileName);
+          }
+        });
+      }
+
       return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Mental Health First Aid Guide", "Active Listening Techniques"]
+        content: data.answer || "I'm sorry, I couldn't generate a response. Please try again.",
+        sources: sourcesList.length > 0 ? sourcesList : undefined,
+      };
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+      // Fallback response in case of error
+      return {
+        content: "I'm sorry, I'm having trouble connecting right now. Please check your connection and try again. If the problem persists, I'm still here to listen and support you.",
+        sources: undefined,
       };
     }
-    
-    // Feeling low/depressed
-    if (lowerInput.includes("low") || lowerInput.includes("depressed") || lowerInput.includes("down") || lowerInput.includes("sad")) {
-      const responses = [
-        "I hear you. Want to share what's been weighing on you the most today?",
-        "That sounds tough. Do you feel like it's more emotional or physical exhaustion?",
-        "It's okay to feel that way sometimes. Would talking about it help, or do you prefer some gentle distraction?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Understanding Depression in Young Adults", "Emotional Wellness Guide"]
-      };
-    }
-    
-    // Can't focus
-    if (lowerInput.includes("focus") || lowerInput.includes("concentrate") || lowerInput.includes("distracted")) {
-      const responses = [
-        "That sounds frustrating. Do you want to try a quick grounding exercise together?",
-        "Sometimes our minds need a break. Would you like me to guide you through a short breathing technique?",
-        "What usually helps you refocus—music, journaling, or maybe stepping away for a bit?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Focus and Concentration Techniques", "Mindfulness for Students"]
-      };
-    }
-    
-    // Anxiety about future
-    if (lowerInput.includes("anxious") || lowerInput.includes("anxiety") || lowerInput.includes("tomorrow") || lowerInput.includes("future") || lowerInput.includes("worried")) {
-      const responses = [
-        "I understand. Do you want to talk about what's happening tomorrow that's making you anxious?",
-        "It's completely normal to feel that way. Want me to help you make a small plan for tomorrow?",
-        "Would you like me to walk you through a calming visualization exercise?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Anxiety and Stress Management for Students", "Cognitive Behavioral Therapy Basics"]
-      };
-    }
-    
-    // Self-worth issues
-    if (lowerInput.includes("good enough") || lowerInput.includes("not enough") || lowerInput.includes("worthless") || lowerInput.includes("failure")) {
-      const responses = [
-        "I'm really sorry you feel that way. Can you tell me what made you feel like this today?",
-        "You're being really hard on yourself. Would you like me to remind you of some of your strengths?",
-        "Feeling 'not enough' is painful. Do you want to explore where that thought is coming from together?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Building Self-Esteem", "Cognitive Restructuring Techniques"]
-      };
-    }
-    
-    // Relationship conflicts
-    if (lowerInput.includes("fight") || lowerInput.includes("argument") || lowerInput.includes("friend") || lowerInput.includes("conflict")) {
-      const responses = [
-        "That must feel really heavy. Do you want to share what happened?",
-        "Arguments with people we care about can hurt deeply. Would you like me to help you think of ways to reach out?",
-        "Sometimes we just need space. Do you feel like you want to reconnect soon, or take some time?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Conflict Resolution", "Healthy Relationships Guide"]
-      };
-    }
-    
-    // Sleep issues
-    if (lowerInput.includes("sleep") || lowerInput.includes("insomnia") || lowerInput.includes("tired") || lowerInput.includes("night")) {
-      const responses = [
-        "That sounds draining. Would you like me to guide you through a relaxation routine?",
-        "Insomnia can be so frustrating. Do you think it's stress-related, or is your mind just racing?",
-        "Want me to share some small sleep hygiene tips that might help?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Sleep Hygiene for Students", "Mindful Rest Practices"]
-      };
-    }
-    
-    // Loneliness
-    if (lowerInput.includes("alone") || lowerInput.includes("lonely") || lowerInput.includes("isolated")) {
-      const responses = [
-        "I'm really glad you shared that with me. Would you like to talk about what makes you feel this way?",
-        "Feeling lonely can be very painful. Do you want me to suggest small ways to feel a little more connected?",
-        "Even if I can't replace people in your life, I'm here for you right now. Want to chat about something that brings you comfort?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Coping with Loneliness", "Building Social Connections"]
-      };
-    }
-    
-    // Lack of interest/motivation
-    if (lowerInput.includes("excite") || lowerInput.includes("interest") || lowerInput.includes("motivation") || lowerInput.includes("boring")) {
-      const responses = [
-        "That sounds like a heavy feeling. When was the last time you remember feeling excited about something?",
-        "Sometimes we go through phases of feeling flat. Want to try revisiting something you used to enjoy together?",
-        "Do you want me to suggest a small activity you could try to spark even a little interest?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Motivation and Engagement", "Finding Joy in Daily Life"]
-      };
-    }
-    
-    // Overwhelmed
-    if (lowerInput.includes("overwhelmed") || lowerInput.includes("too much") || lowerInput.includes("pressure") || lowerInput.includes("stress")) {
-      const responses = [
-        "That's a lot to carry. Do you want me to help you break things down into smaller steps?",
-        "When everything feels too much, even one small step matters. Want to start with the easiest one together?",
-        "Would it help if we listed what's urgent vs what can wait?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Stress Management", "Time Management for Students"]
-      };
-    }
-    
-    // Hopelessness
-    if (lowerInput.includes("better") || lowerInput.includes("hopeless") || lowerInput.includes("future") || lowerInput.includes("wonder")) {
-      const responses = [
-        "That's a really heavy thought. Do you want to talk about what's making you feel hopeless right now?",
-        "I believe things can shift over time. Would you like me to share a story of how people get through tough times?",
-        "When the future feels uncertain, focusing on today can sometimes help. Want me to guide you through a small grounding moment?"
-      ];
-      return {
-        content: responses[Math.floor(Math.random() * responses.length)],
-        sources: ["Building Hope and Resilience", "Crisis Intervention Basics"]
-      };
-    }
-    
-    // Academic stress
-    if (lowerInput.includes("exam") || lowerInput.includes("test") || lowerInput.includes("study") || lowerInput.includes("grade")) {
-      return {
-        content: "Academic pressure can feel overwhelming, but you're not alone in this. Here are some strategies that many students find helpful: Break your study sessions into manageable chunks (25-minute focused sessions with 5-minute breaks), create a realistic study schedule, and remember that your worth isn't defined by grades. What subject or aspect of studying is challenging you the most?",
-        sources: ["Study Techniques for Student Success", "Managing Academic Stress"]
-      };
-    }
-    
-    // Gratitude/thanks
-    if (lowerInput.includes("thank") || lowerInput.includes("help") || lowerInput.includes("appreciate")) {
-      return {
-        content: "You're very welcome! I'm glad I could be here for you. Remember, taking care of your mental health is an ongoing journey, and every small step counts. I'm always here when you need support, encouragement, or just someone to listen. You're doing great by reaching out and taking care of yourself.",
-        sources: ["Self-Care Practices", "Building Resilience"]
-      };
-    }
-    
-    // Default response
-    return {
-      content: "Thank you for sharing that with me. I'm here to listen and support you through whatever you're experiencing. Every person's journey is unique, and your feelings are completely valid. Would you like to tell me more about what's on your mind? Sometimes talking through our thoughts can help us see them more clearly.",
-      sources: ["Active Listening in Mental Health", "Empathetic Communication"]
-    };
   };
 
-  const handleSendMessage = useCallback((message?: string) => {
+  const handleSendMessage = useCallback(async (message?: string) => {
     const messageToSend = (message ?? inputValue).trim();
     if (!messageToSend) return;
 
@@ -310,9 +184,9 @@ const Chat = ({ isOpen, onClose, initialMessage }: ChatProps) => {
     setShowSuggestions(false);
     setIsTyping(true);
 
-    // Simulate AI thinking time
-    setTimeout(() => {
-      const response = getMockResponse(messageToSend);
+    try {
+      // Call the backend API
+      const response = await getAIResponse(messageToSend);
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: response.content,
@@ -322,8 +196,19 @@ const Chat = ({ isOpen, onClose, initialMessage }: ChatProps) => {
       };
 
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Show error message to user
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm sorry, I'm having trouble connecting right now. Please check your connection and try again. If the problem persists, I'm still here to listen and support you.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   }, [inputValue]);
 
   useEffect(() => {

@@ -26,3 +26,8 @@ langchain-pinecone
 langchain_community
 langchain_openai
 langchain_experimental
+streamlit
+fastapi
+uvicorn[standard]
+pydantic
+huggingface_hub==0.14.1
