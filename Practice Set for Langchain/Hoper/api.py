@@ -1,5 +1,5 @@
 """
-FastAPI RAG API: PDFs -> Pinecone -> Retriever -> LLM
+FastAPI RAG API: PDFs -> PineconeVectorStore -> Retriever -> LLM
 Behavior:
 - Try RAG first
 - If retrieval yields 0 docs, answer is empty/unsure, or an error occurs -> fall back to plain OpenAI.
@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional
 
 from dotenv import load_dotenv
+
+# Load environment variables FIRST, before any other imports that might need them
+# .env file is in the parent directory - load it with override=True to ensure it takes precedence
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -28,7 +33,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 # Pinecone
 from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
-from langchain_pinecone import PineconeVectorStore
+from langchain_pinecone import Pinecone as PineconeVectorStore
 
 # LLM + chains
 from langchain_openai import ChatOpenAI
@@ -133,6 +138,10 @@ def get_pinecone_client() -> Pinecone:
     api_key = os.getenv("PINECONE_API_KEY")
     if not api_key:
         raise RuntimeError("PINECONE_API_KEY is not set. Put it in your .env.")
+    # Strip any whitespace that might have been included
+    api_key = api_key.strip()
+    # Debug: print first/last few chars to verify (without exposing full key)
+    print(f"🔑 Using Pinecone API key (length: {len(api_key)}, starts with: {api_key[:10]}...)")
     return Pinecone(api_key=api_key)
 
 
@@ -308,7 +317,7 @@ def bootstrap_pipeline(k_top: int = K_TOP):
 @app.on_event("startup")
 async def startup_event():
     """Initialize the pipeline on startup."""
-    load_dotenv()
+    # Environment variables already loaded at module level
     try:
         bootstrap_pipeline()
         print("✅ HOPEr API initialized successfully")

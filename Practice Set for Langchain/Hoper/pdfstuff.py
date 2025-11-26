@@ -276,7 +276,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 # Pinecone
 from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
-from langchain_pinecone import PineconeVectorStore
+from langchain_pinecone import Pinecone as PineconeVectorStore
 
 # LLM + chains
 from langchain_openai import ChatOpenAI
